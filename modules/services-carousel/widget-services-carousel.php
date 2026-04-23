@@ -313,8 +313,7 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#212121',
 			'selectors' => [
-				'{{WRAPPER}} .trs-sc-btn'            => 'background-color: {{VALUE}};',
-				'{{WRAPPER}} .trs-services-carousel' => '--trs-sc-btn-bg: {{VALUE}};',
+				'{{WRAPPER}} .trs-sc-btn' => 'background-color: {{VALUE}};',
 			],
 		] );
 

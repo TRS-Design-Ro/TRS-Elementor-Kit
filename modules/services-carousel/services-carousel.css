@@ -5,9 +5,8 @@
 .trs-services-carousel {
 	--trs-sc-cards: 3.5;
 	--trs-sc-gap: 20px;
-	/* Fallback colours for the right-edge fade; overridden by Elementor controls */
+	/* Fallback colour for the right-edge fade; overridden by Elementor controls */
 	--trs-sc-card-bg: #f8f7f2;
-	--trs-sc-btn-bg: #212121;
 	position: relative;
 	overflow: hidden;
 	width: 100%;
@@ -15,28 +14,12 @@
 
 /* ── Right-edge fade overlaid on the carousel container ─────────────────── */
 
-/* Upper portion — fades card text into the card background colour */
 .trs-services-carousel::before {
 	content: '';
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: calc(48px + 24px); /* button height + card bottom padding */
-	width: 35%;
+	inset: 0 0 0 auto;
+	width: 15%;
 	background: linear-gradient(to right, transparent, var(--trs-sc-card-bg));
-	pointer-events: none;
-	z-index: 2;
-}
-
-/* Lower strip — fades button text into the button background colour */
-.trs-services-carousel::after {
-	content: '';
-	position: absolute;
-	right: 0;
-	bottom: 24px; /* card bottom padding */
-	height: 48px;
-	width: 35%;
-	background: linear-gradient(to right, transparent, var(--trs-sc-btn-bg));
 	pointer-events: none;
 	z-index: 2;
 }
