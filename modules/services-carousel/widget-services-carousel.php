@@ -139,7 +139,10 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'label'     => esc_html__( 'Background Color', 'trs-kit' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#f8f7f2',
-			'selectors' => [ '{{WRAPPER}} .trs-sc-card' => 'background-color: {{VALUE}}; --trs-sc-card-bg: {{VALUE}};' ],
+			'selectors' => [
+				'{{WRAPPER}} .trs-sc-card'         => 'background-color: {{VALUE}};',
+				'{{WRAPPER}} .trs-services-carousel' => '--trs-sc-card-bg: {{VALUE}};',
+			],
 		] );
 
 		$this->add_responsive_control( 'cards_per_view', [
@@ -310,8 +313,7 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#212121',
 			'selectors' => [
-				'{{WRAPPER}} .trs-sc-btn'  => 'background-color: {{VALUE}};',
-				'{{WRAPPER}} .trs-sc-card' => '--trs-sc-btn-bg: {{VALUE}};',
+				'{{WRAPPER}} .trs-sc-btn' => 'background-color: {{VALUE}};',
 			],
 		] );
 

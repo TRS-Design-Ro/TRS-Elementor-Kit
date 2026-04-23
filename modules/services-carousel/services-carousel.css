@@ -5,11 +5,23 @@
 .trs-services-carousel {
 	--trs-sc-cards: 3.5;
 	--trs-sc-gap: 20px;
-	/* Fallback colours for the last-card fade; overridden by Elementor controls */
+	/* Fallback colour for the right-edge fade; overridden by Elementor controls */
 	--trs-sc-card-bg: #f8f7f2;
-	--trs-sc-btn-bg: #212121;
+	position: relative;
 	overflow: hidden;
 	width: 100%;
+}
+
+/* ── Right-edge fade overlaid on the carousel container ─────────────────── */
+
+.trs-services-carousel::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 0 auto;
+	width: 10%;
+	background: linear-gradient(to right, transparent, var(--trs-sc-card-bg));
+	pointer-events: none;
+	z-index: 2;
 }
 
 /* ── Track ──────────────────────────────────────────────────────────────── */
@@ -56,32 +68,6 @@
 	box-sizing: border-box;
 }
 
-/* ── Last-card right-edge fade ──────────────────────────────────────────── */
-
-/* Fade over the text / icon area — blends into the card background */
-.trs-sc-card:last-child::before {
-	content: '';
-	position: absolute;
-	inset: 0 0 calc(48px + 24px) 0; /* 48px button height + 24px bottom padding */
-	background: linear-gradient(to right, transparent 50%, var(--trs-sc-card-bg) 100%);
-	border-radius: 24px 24px 0 0;
-	pointer-events: none;
-	z-index: 1;
-}
-
-/* Fade over the button — blends into the button background */
-.trs-sc-card:last-child::after {
-	content: '';
-	position: absolute;
-	bottom: 24px; /* card bottom padding */
-	left: 0;
-	right: 0;
-	height: 48px;
-	background: linear-gradient(to right, transparent 50%, var(--trs-sc-btn-bg) 100%);
-	border-radius: 56px;
-	pointer-events: none;
-	z-index: 1;
-}
 
 /* ── Icon ───────────────────────────────────────────────────────────────── */
 
