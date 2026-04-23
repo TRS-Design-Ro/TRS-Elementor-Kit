@@ -3,6 +3,11 @@
    ========================================================================== */
 
 .trs-services-carousel {
+	--trs-sc-cards: 3.5;
+	--trs-sc-gap: 20px;
+	/* Fallback colours for the last-card fade; overridden by Elementor controls */
+	--trs-sc-card-bg: #f8f7f2;
+	--trs-sc-btn-bg: #212121;
 	overflow: hidden;
 	width: 100%;
 }
@@ -36,10 +41,12 @@
 /* ── Card ───────────────────────────────────────────────────────────────── */
 
 .trs-sc-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 60px;
-	width: 344px;
+	/* Derived from --trs-sc-cards and --trs-sc-gap set by Elementor controls */
+	width: calc((100% - var(--trs-sc-gap) * (var(--trs-sc-cards) - 1)) / var(--trs-sc-cards));
 	min-height: 390px;
 	flex-shrink: 0;
 	background-color: #f8f7f2;
@@ -47,6 +54,33 @@
 	padding: 24px;
 	scroll-snap-align: start;
 	box-sizing: border-box;
+}
+
+/* ── Last-card right-edge fade ──────────────────────────────────────────── */
+
+/* Fade over the text / icon area — blends into the card background */
+.trs-sc-card:last-child::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 calc(48px + 24px) 0; /* 48px button height + 24px bottom padding */
+	background: linear-gradient(to right, transparent 50%, var(--trs-sc-card-bg) 100%);
+	border-radius: 24px 24px 0 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Fade over the button — blends into the button background */
+.trs-sc-card:last-child::after {
+	content: '';
+	position: absolute;
+	bottom: 24px; /* card bottom padding */
+	left: 0;
+	right: 0;
+	height: 48px;
+	background: linear-gradient(to right, transparent 50%, var(--trs-sc-btn-bg) 100%);
+	border-radius: 56px;
+	pointer-events: none;
+	z-index: 1;
 }
 
 /* ── Icon ───────────────────────────────────────────────────────────────── */
@@ -144,16 +178,11 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
-
-@media (max-width: 1024px) {
-	.trs-sc-card {
-		width: 300px;
-	}
-}
+/* Card width is driven by --trs-sc-cards / --trs-sc-gap (set per-breakpoint
+   by Elementor). Only non-width overrides belong here. */
 
 @media (max-width: 767px) {
 	.trs-sc-card {
-		width: 280px;
 		gap: 40px;
 	}
 

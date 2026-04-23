@@ -139,18 +139,20 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'label'     => esc_html__( 'Background Color', 'trs-kit' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#f8f7f2',
-			'selectors' => [ '{{WRAPPER}} .trs-sc-card' => 'background-color: {{VALUE}};' ],
+			'selectors' => [ '{{WRAPPER}} .trs-sc-card' => 'background-color: {{VALUE}}; --trs-sc-card-bg: {{VALUE}};' ],
 		] );
 
-		$this->add_responsive_control( 'card_width', [
-			'label'          => esc_html__( 'Card Width', 'trs-kit' ),
-			'type'           => \Elementor\Controls_Manager::SLIDER,
-			'size_units'     => [ 'px', 'vw' ],
-			'range'          => [ 'px' => [ 'min' => 200, 'max' => 600 ] ],
-			'default'        => [ 'unit' => 'px', 'size' => 344 ],
-			'tablet_default' => [ 'unit' => 'px', 'size' => 300 ],
-			'mobile_default' => [ 'unit' => 'px', 'size' => 280 ],
-			'selectors'      => [ '{{WRAPPER}} .trs-sc-card' => 'width: {{SIZE}}{{UNIT}};' ],
+		$this->add_responsive_control( 'cards_per_view', [
+			'label'          => esc_html__( 'Cards Visible', 'trs-kit' ),
+			'type'           => \Elementor\Controls_Manager::NUMBER,
+			'min'            => 1,
+			'max'            => 10,
+			'step'           => 0.5,
+			'default'        => 3.5,
+			'tablet_default' => 2.5,
+			'mobile_default' => 1.2,
+			'description'    => esc_html__( 'Decimal values (e.g. 3.5) show a partial card to hint at overflow.', 'trs-kit' ),
+			'selectors'      => [ '{{WRAPPER}} .trs-services-carousel' => '--trs-sc-cards: {{VALUE}};' ],
 		] );
 
 		$this->add_responsive_control( 'card_min_height', [
@@ -189,7 +191,10 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'type'       => \Elementor\Controls_Manager::SLIDER,
 			'size_units' => [ 'px' ],
 			'default'    => [ 'unit' => 'px', 'size' => 20 ],
-			'selectors'  => [ '{{WRAPPER}} .trs-sc-track' => 'gap: {{SIZE}}{{UNIT}};' ],
+			'selectors'  => [
+				'{{WRAPPER}} .trs-services-carousel' => '--trs-sc-gap: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .trs-sc-track'          => 'gap: {{SIZE}}{{UNIT}};',
+			],
 		] );
 
 		$this->end_controls_section();
@@ -304,7 +309,10 @@ class TRS_Widget_Services_Carousel extends \Elementor\Widget_Base {
 			'label'     => esc_html__( 'Background Color', 'trs-kit' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#212121',
-			'selectors' => [ '{{WRAPPER}} .trs-sc-btn' => 'background-color: {{VALUE}};' ],
+			'selectors' => [
+				'{{WRAPPER}} .trs-sc-btn'  => 'background-color: {{VALUE}};',
+				'{{WRAPPER}} .trs-sc-card' => '--trs-sc-btn-bg: {{VALUE}};',
+			],
 		] );
 
 		$this->add_control( 'button_text_color', [
