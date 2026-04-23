@@ -3,6 +3,34 @@
 	'use strict';
 
 	/**
+	 * Marks the rightmost partially-visible card with `is-last-visible` so the
+	 * CSS right-edge fade always tracks the scroll position.
+	 *
+	 * @param {HTMLElement} track  - The scrollable track element.
+	 * @param {NodeList}    cards  - All card elements inside the track.
+	 */
+	const updateLastVisible = function( track, cards ) {
+		const trackRight = track.getBoundingClientRect().right;
+		let lastVisible  = null;
+
+		cards.forEach( function( card ) {
+			const left = card.getBoundingClientRect().left;
+			// Include every card whose left edge is still within the track.
+			if ( left < trackRight ) {
+				lastVisible = card;
+			}
+		} );
+
+		cards.forEach( function( card ) {
+			card.classList.remove( 'is-last-visible' );
+		} );
+
+		if ( lastVisible ) {
+			lastVisible.classList.add( 'is-last-visible' );
+		}
+	};
+
+	/**
 	 * Initialises drag-to-scroll behaviour on a single carousel instance.
 	 *
 	 * @param {jQuery} $scope - The Elementor widget wrapper element.
@@ -12,6 +40,18 @@
 		if ( ! $track.length ) return;
 
 		const track = $track[ 0 ];
+		const cards = track.querySelectorAll( '.trs-sc-card' );
+
+		// ── Last-visible fade ────────────────────────────────────────────────
+		updateLastVisible( track, cards );
+
+		track.addEventListener( 'scroll', function() {
+			updateLastVisible( track, cards );
+		}, { passive: true } );
+
+		window.addEventListener( 'resize', function() {
+			updateLastVisible( track, cards );
+		}, { passive: true } );
 
 		// ── Mouse drag ──────────────────────────────────────────────────────
 		let isDown    = false;

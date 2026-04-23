@@ -59,7 +59,7 @@
 /* ── Last-card right-edge fade ──────────────────────────────────────────── */
 
 /* Fade over the text / icon area — blends into the card background */
-.trs-sc-card:last-child::before {
+.trs-sc-card.is-last-visible::before {
 	content: '';
 	position: absolute;
 	inset: 0 0 calc(48px + 24px) 0; /* 48px button height + 24px bottom padding */
@@ -70,7 +70,7 @@
 }
 
 /* Fade over the button — blends into the button background */
-.trs-sc-card:last-child::after {
+.trs-sc-card.is-last-visible::after {
 	content: '';
 	position: absolute;
 	bottom: 24px; /* card bottom padding */
