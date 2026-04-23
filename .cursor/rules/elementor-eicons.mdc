@@ -1,0 +1,113 @@
+---
+description: Valid eicon class names for get_icon() in Elementor widgets — sourced from https://elementor.github.io/elementor-icons/
+globs: modules/**/*.php
+alwaysApply: true
+---
+
+# Elementor Widget Icons (eicons)
+
+The value returned by `get_icon()` **must** be an eicon slug from this list.
+Any other value leaves the widget without an image in the Elementor panel.
+
+**Reference:** https://elementor.github.io/elementor-icons/
+
+## Choosing an icon
+
+Pick the icon that best describes the widget's purpose. Common picks:
+
+| Widget type | Recommended icon |
+|---|---|
+| Steps / timeline / process | `eicon-time-line` |
+| Carousel / slider | `eicon-carousel` |
+| Posts / cards grid | `eicon-posts-grid` |
+| Image + text box | `eicon-image-box` |
+| Testimonial | `eicon-testimonial` |
+| Call to action | `eicon-call-to-action` |
+| Counter / number | `eicon-counter` |
+| Accordion / toggle | `eicon-accordion` |
+| Tabs | `eicon-tabs` |
+| Icon box / info box | `eicon-info-box` |
+| Heading / text | `eicon-heading` |
+| Button | `eicon-button` |
+| Divider | `eicon-divider` |
+| Gallery | `eicon-gallery-grid` |
+| Price table | `eicon-price-table` |
+| Generic / fallback | `eicon-plug` |
+
+## Full valid slug list
+
+```
+eicon-accordion          eicon-alert              eicon-anchor
+eicon-animation          eicon-animation-text     eicon-archive
+eicon-archive-posts      eicon-archive-title      eicon-arrow-circle-left
+eicon-arrow-down         eicon-arrow-left         eicon-arrow-right
+eicon-arrow-up           eicon-background         eicon-ban
+eicon-banner             eicon-barcode            eicon-blockquote
+eicon-bullet-list        eicon-button             eicon-calendar
+eicon-call-to-action     eicon-carousel           eicon-carousel-loop
+eicon-cart               eicon-check              eicon-check-circle
+eicon-check-circle-o     eicon-chevron-double-left eicon-chevron-double-right
+eicon-chevron-left       eicon-chevron-right      eicon-click
+eicon-clock              eicon-clock-o            eicon-close
+eicon-close-circle       eicon-code               eicon-code-bold
+eicon-cog                eicon-cogs               eicon-cogs-check
+eicon-column             eicon-columns            eicon-commenting-o
+eicon-comments           eicon-container          eicon-container-grid
+eicon-counter            eicon-counter-circle     eicon-countdown
+eicon-cursor-move        eicon-database           eicon-date
+eicon-device-desktop     eicon-device-laptop      eicon-device-mobile
+eicon-device-responsive  eicon-device-tablet      eicon-device-wide
+eicon-divider            eicon-divider-shape      eicon-document-file
+eicon-download-button    eicon-drag-n-drop        eicon-dual-button
+eicon-edit               eicon-editor-bold        eicon-editor-h1
+eicon-editor-italic      eicon-editor-link        eicon-editor-list-ol
+eicon-editor-list-ul     eicon-editor-paragraph   eicon-editor-quote
+eicon-editor-underline   eicon-elementor          eicon-elementor-circle
+eicon-envelope           eicon-error-404          eicon-exchange
+eicon-expand             eicon-facebook           eicon-favorite
+eicon-featured-image     eicon-filter             eicon-flash
+eicon-flip               eicon-flip-box           eicon-flow
+eicon-folder             eicon-font               eicon-form-horizontal
+eicon-form-vertical      eicon-gallery-grid       eicon-gallery-group
+eicon-gallery-justified  eicon-gallery-masonry    eicon-globe
+eicon-google-maps        eicon-grow               eicon-handle
+eicon-heading            eicon-headphones         eicon-heart
+eicon-heart-o            eicon-help               eicon-help-o
+eicon-history            eicon-hotspot            eicon-icon
+eicon-icon-wrapper       eicon-image              eicon-image-before-after
+eicon-image-bold         eicon-image-box          eicon-image-hotspot
+eicon-image-rollover     eicon-info               eicon-info-box
+eicon-info-circle        eicon-info-circle-o      eicon-inner-section
+eicon-layout             eicon-link               eicon-lock
+eicon-logo               eicon-long-arrow-left    eicon-long-arrow-right
+eicon-lottie             eicon-mail               eicon-map-pin
+eicon-media-carousel     eicon-mega-menu          eicon-menu-bar
+eicon-menu-card          eicon-menu-toggle        eicon-meta-data
+eicon-nav-menu           eicon-navigation-horizontal eicon-navigation-vertical
+eicon-nested-carousel    eicon-notes              eicon-number-field
+eicon-page-transition    eicon-paint-brush        eicon-parallax
+eicon-person             eicon-photo-library      eicon-pinterest
+eicon-plug               eicon-post               eicon-post-content
+eicon-post-excerpt       eicon-post-info          eicon-post-list
+eicon-post-navigation    eicon-post-slider        eicon-post-title
+eicon-posts-carousel     eicon-posts-grid         eicon-posts-group
+eicon-posts-justified    eicon-posts-masonry      eicon-posts-ticker
+eicon-price-list         eicon-price-table        eicon-products
+eicon-progress-tracker   eicon-radio              eicon-rating
+eicon-review             eicon-scroll             eicon-search
+eicon-section            eicon-settings           eicon-share
+eicon-share-arrow        eicon-sidebar            eicon-single-post
+eicon-sitemap            eicon-skill-bar          eicon-slider-3d
+eicon-slider-album       eicon-slider-device      eicon-slider-full-screen
+eicon-slider-push        eicon-slider-vertical    eicon-slider-video
+eicon-slides             eicon-social-icons       eicon-spacer
+eicon-star               eicon-star-o             eicon-table
+eicon-table-of-contents  eicon-tabs               eicon-tags
+eicon-testimonial        eicon-testimonial-carousel eicon-text
+eicon-time-line          eicon-toggle             eicon-tools
+eicon-trash              eicon-tv                 eicon-twitter
+eicon-typography         eicon-upload             eicon-url
+eicon-video              eicon-video-camera       eicon-video-playlist
+eicon-warning            eicon-wordpress          eicon-wrench
+eicon-youtube
+```
