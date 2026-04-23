@@ -1,0 +1,233 @@
+/* ==========================================================
+   Steps With Image  –  mobile-first stylesheet
+   ==========================================================
+   Layout overview
+   ─────────────────────────────────────────────────────────
+   Mobile  (<960 px)  : single column; image floats to top,
+                        left-panel then right-panel below.
+   Desktop (≥960 px)  : three-column grid:
+                        [left steps] [image] [right steps]
+   ========================================================== */
+
+/* ── Custom properties ──────────────────────────────────── */
+
+.trs-steps-with-image {
+	--trs-swi-gap:          20px;
+	--trs-swi-image-width:  260px;
+	--trs-swi-panel-bg:     #f8f7f2;
+	--trs-swi-panel-radius: 24px;
+	--trs-swi-icon-bg:      #fbd760;
+	--trs-swi-icon-color:   #212121;
+	--trs-swi-text-color:   #212121;
+	--trs-swi-divider:      #e0dfd9;
+	--trs-swi-img-radius:   24px;
+}
+
+/* ── Wrapper – mobile: single-column grid ───────────────── */
+
+.trs-steps-with-image {
+	display: grid;
+	gap: var(--trs-swi-gap);
+	grid-template-columns: 1fr;
+	grid-template-areas:
+		"image"
+		"left"
+		"right";
+}
+
+.trs-swi-panel--left  { grid-area: left; }
+.trs-swi-image-wrap   { grid-area: image; }
+.trs-swi-panel--right { grid-area: right; }
+
+/* ── Panel ──────────────────────────────────────────────── */
+
+.trs-swi-panel {
+	background-color: var(--trs-swi-panel-bg);
+	border-radius: var(--trs-swi-panel-radius);
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+}
+
+/* ── Step row ───────────────────────────────────────────── */
+
+.trs-swi-step-inner {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+}
+
+/* ── Icon bubble ────────────────────────────────────────── */
+
+.trs-swi-icon-wrap {
+	background-color: var(--trs-swi-icon-bg);
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.trs-swi-icon-wrap i {
+	font-size: 20px;
+	color: var(--trs-swi-icon-color);
+}
+
+.trs-swi-icon-wrap svg {
+	width: 20px;
+	height: 20px;
+	fill: var(--trs-swi-icon-color);
+	color: var(--trs-swi-icon-color);
+}
+
+/* ── Step text ──────────────────────────────────────────── */
+
+.trs-swi-step-content {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1;
+	min-width: 0;
+}
+
+.trs-swi-title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--trs-swi-text-color);
+}
+
+.trs-swi-description {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--trs-swi-text-color);
+}
+
+/* ── Divider ────────────────────────────────────────────── */
+
+.trs-swi-divider {
+	border: none;
+	border-top: 1px solid var(--trs-swi-divider);
+	margin: 28px 0;
+}
+
+/* ── Center image – mobile ──────────────────────────────── */
+
+.trs-swi-image-wrap {
+	border-radius: var(--trs-swi-img-radius);
+	overflow: hidden;
+	position: relative; /* anchor for the absolutely-positioned image */
+	/* Portrait aspect on mobile so the person's face isn't cropped */
+	aspect-ratio: 4 / 3;
+}
+
+.trs-swi-image {
+	/* Absolute positioning removes the image from flow so its intrinsic
+	   size never inflates the wrapper or the grid row — the wrapper size
+	   is always driven by the panels, never by the image itself. */
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center top;
+}
+
+/* ── Mobile timeline connector ──────────────────────────── */
+/*
+   On mobile the steps live in two separate panels (left + right).
+   A subtle vertical rule inside each panel reinforces the "process"
+   reading direction without adding DOM noise.
+*/
+@media (max-width: 959px) {
+	.trs-swi-panel {
+		/* Bump step-gap up a touch so the dividers breathe on small screens */
+		gap: 0;
+	}
+
+	.trs-swi-title {
+		font-size: 18px;
+	}
+
+	/* Give empty right panel zero height so it doesn't add blank space */
+	.trs-swi-panel--right:empty {
+		display: none;
+	}
+}
+
+/* ==========================================================
+   Desktop  ≥ 960 px  –  three-column grid
+   ========================================================== */
+
+@media (min-width: 960px) {
+	.trs-steps-with-image {
+		grid-template-columns: 1fr var(--trs-swi-image-width) 1fr;
+		grid-template-areas: "left image right";
+		/* Panels size to their own content; image is stretched separately */
+		align-items: start;
+	}
+
+	/* Image wrapper stretches to the row height set by the panels.
+	   Because .trs-swi-image is absolutely positioned (out of flow),
+	   this wrapper contributes zero intrinsic height to the row —
+	   it cannot make the row taller than the panels require. */
+	.trs-swi-image-wrap {
+		aspect-ratio: auto;
+		align-self: stretch;
+	}
+
+	.trs-swi-title {
+		font-size: 22px;
+	}
+
+	/* Restore empty right panel visibility (it preserves the grid column) */
+	.trs-swi-panel--right:empty {
+		display: flex;
+	}
+}
+
+/* ==========================================================
+   Mobile modifiers  (<960 px)
+   ========================================================== */
+
+/* ── Hide image on mobile ───────────────────────────────── */
+
+@media (max-width: 959px) {
+	.trs-swi--hide-image-mobile .trs-swi-image-wrap {
+		display: none;
+	}
+}
+
+/* ── Unite the two step panels into one continuous block ── */
+
+@media (max-width: 959px) {
+	.trs-swi--united-mobile {
+		row-gap: 0;
+	}
+
+	/* Restore the gap between the image and the first panel */
+	.trs-swi--united-mobile .trs-swi-image-wrap {
+		margin-bottom: var(--trs-swi-gap);
+	}
+
+	/* Hidden image must not leave a dangling margin */
+	.trs-swi--hide-image-mobile.trs-swi--united-mobile .trs-swi-image-wrap {
+		margin-bottom: 0;
+	}
+
+	/* Left panel: flatten the bottom edge to meet the right panel */
+	.trs-swi--united-mobile .trs-swi-panel--left {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	/* Right panel: flatten the top edge and add a joining divider */
+	.trs-swi--united-mobile .trs-swi-panel--right:not(:empty) {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}

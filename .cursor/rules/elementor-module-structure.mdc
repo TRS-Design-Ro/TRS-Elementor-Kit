@@ -31,7 +31,7 @@ class TRS_Widget_Module_Name extends \Elementor\Widget_Base {
 
     public function get_name(): string        { return 'trs-module-name'; }
     public function get_title(): string       { return esc_html__( 'Module Name', 'trs-kit' ); }
-    public function get_icon(): string        { return 'eicon-plug'; }
+    public function get_icon(): string        { return 'eicon-plug'; }  // must be a valid eicon slug — see elementor-eicons.mdc
     public function get_categories(): array   { return [ 'trs-kit' ]; }
 
     public function get_style_depends(): array  { return [ 'trs-module-name' ]; }
