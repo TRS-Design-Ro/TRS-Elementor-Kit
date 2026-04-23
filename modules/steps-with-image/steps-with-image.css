@@ -125,7 +125,7 @@
 	aspect-ratio: 4 / 3;
 }
 
-.trs-swi-image {
+.trs-swi-image-wrap .trs-swi-image {
 	/* Absolute positioning removes the image from flow so its intrinsic
 	   size never inflates the wrapper or the grid row — the wrapper size
 	   is always driven by the panels, never by the image itself. */
@@ -167,8 +167,7 @@
 	.trs-steps-with-image {
 		grid-template-columns: 1fr var(--trs-swi-image-width) 1fr;
 		grid-template-areas: "left image right";
-		/* Panels size to their own content; image is stretched separately */
-		align-items: start;
+		align-items: stretch;
 	}
 
 	/* Image wrapper stretches to the row height set by the panels.
