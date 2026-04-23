@@ -1,2 +1,24 @@
+# Build / cache
 /cache/
 /config/development/
+
+# Composer
+/vendor/
+composer.lock
+
+# Node (if tooling is added later)
+node_modules/
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# WordPress
+*.log
+
