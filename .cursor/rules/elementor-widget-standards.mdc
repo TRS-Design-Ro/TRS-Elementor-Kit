@@ -1,0 +1,129 @@
+---
+description: Elementor control patterns, responsive design, and editable color/typography standards for all TRS Kit widgets
+globs: modules/**/*.php, modules/**/*.css, modules/**/*.js
+alwaysApply: true
+---
+
+# Elementor Widget Standards
+
+## 1. Every Visible Color Must Be Editable
+
+Use `Controls_Manager::COLOR` — never hardcode hex values in PHP or CSS that aren't driven by a control.
+
+```php
+$this->add_control( 'heading_color', [
+    'label'     => esc_html__( 'Heading Color', 'trs-kit' ),
+    'type'      => \Elementor\Controls_Manager::COLOR,
+    'selectors' => [ '{{WRAPPER}} .trs-heading' => 'color: {{VALUE}};' ],
+] );
+```
+
+## 2. Every Text Must Be Editable
+
+Inline text/content → `Controls_Manager::TEXT` or `TEXTAREA`.  
+Rich text → `Controls_Manager::WYSIWYG`.
+
+```php
+$this->add_control( 'heading_text', [
+    'label'   => esc_html__( 'Heading', 'trs-kit' ),
+    'type'    => \Elementor\Controls_Manager::TEXT,
+    'default' => esc_html__( 'Your Heading Here', 'trs-kit' ),
+] );
+```
+
+## 3. Typography Controls
+
+Every text element must have a paired `Group_Control_Typography`:
+
+```php
+$this->add_group_control(
+    \Elementor\Group_Control_Typography::get_type(),
+    [
+        'name'     => 'heading_typography',
+        'selector' => '{{WRAPPER}} .trs-heading',
+    ]
+);
+```
+
+## 4. Controls Organization
+
+| Tab | Sections |
+|-----|----------|
+| **Content** | Content, Layout, Media |
+| **Style** | Colors, Typography, Spacing, Border, Effects |
+| **Advanced** | (Elementor native — do not add custom sections here) |
+
+```php
+$this->start_controls_section( 'section_content', [
+    'label' => esc_html__( 'Content', 'trs-kit' ),
+    'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+] );
+// ... controls ...
+$this->end_controls_section();
+
+$this->start_controls_section( 'section_style', [
+    'label' => esc_html__( 'Style', 'trs-kit' ),
+    'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+] );
+```
+
+## 5. Responsive Controls
+
+Use `'responsive' => true` on Dimensions/Slider controls for automatic desktop/tablet/mobile breakpoints:
+
+```php
+$this->add_responsive_control( 'padding', [
+    'label'      => esc_html__( 'Padding', 'trs-kit' ),
+    'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+    'size_units' => [ 'px', 'em', '%' ],
+    'selectors'  => [ '{{WRAPPER}} .trs-module' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+] );
+```
+
+## 6. CSS Architecture
+
+- **All selectors must start with `{{WRAPPER}}`** — never use bare class names that would bleed across page.
+- Write CSS mobile-first in the `.css` file; use Elementor breakpoints (`1025px` desktop, `768px` tablet, `767px` mobile) for overrides.
+- Use CSS custom properties for values shared between elements inside the same widget:
+
+```css
+/* module-name.css */
+.trs-module-name {
+    --trs-primary-color: #000;
+    --trs-gap: 1.5rem;
+}
+
+@media (max-width: 767px) {
+    .trs-module-name { --trs-gap: 1rem; }
+}
+```
+
+## 7. Render Method Rules
+
+- Always escape output: `esc_html()`, `esc_url()`, `esc_attr()`, `wp_kses_post()`.
+- Read controls via `$this->get_settings_for_display()`.
+- Guard empty values before rendering markup.
+
+```php
+protected function render(): void {
+    $settings = $this->get_settings_for_display();
+    if ( empty( $settings['heading_text'] ) ) return;
+    echo '<h2 class="trs-heading">' . esc_html( $settings['heading_text'] ) . '</h2>';
+}
+```
+
+## 8. JavaScript
+
+- Wrap in an IIFE; use `elementorFrontend.hooks` to initialise on editor reload:
+
+```js
+( function( $ ) {
+    const initModule = ( $scope ) => {
+        // init logic
+    };
+
+    $( window ).on( 'elementor/frontend/init', () => {
+        elementorFrontend.hooks.addAction( 'frontend/element_ready/trs-module-name.default', initModule );
+    } );
+} )( jQuery );
+```

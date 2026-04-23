@@ -1,0 +1,74 @@
+---
+description: File structure, naming, and registration conventions for every Elementor module in this kit
+alwaysApply: true
+---
+
+# Elementor Module Structure
+
+Every module lives in its own self-contained folder. No exceptions.
+
+## Directory Layout
+
+```
+modules/
+  module-name/
+    widget-module-name.php   # Elementor widget class
+    module-name.js           # Front-end JavaScript (enqueued only when widget is on page)
+    module-name.css          # Front-end styles (enqueued only when widget is on page)
+```
+
+- Folder and file names: **lowercase, hyphenated** (`hero-banner`, `pricing-table`)
+- Widget PHP file prefix: `widget-` (e.g. `widget-hero-banner.php`)
+- One widget class per file; class name: `TRS_Widget_Hero_Banner` (prefix `TRS_Widget_`)
+
+## Widget PHP Skeleton
+
+```php
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+class TRS_Widget_Module_Name extends \Elementor\Widget_Base {
+
+    public function get_name(): string        { return 'trs-module-name'; }
+    public function get_title(): string       { return esc_html__( 'Module Name', 'trs-kit' ); }
+    public function get_icon(): string        { return 'eicon-plug'; }
+    public function get_categories(): array   { return [ 'trs-kit' ]; }
+
+    public function get_style_depends(): array  { return [ 'trs-module-name' ]; }
+    public function get_script_depends(): array { return [ 'trs-module-name' ]; }
+
+    protected function register_controls(): void { /* controls here */ }
+    protected function render(): void            { /* template here */ }
+}
+```
+
+## Asset Registration
+
+Register and enqueue assets in the **main plugin/kit loader**, not inside the widget class:
+
+```php
+wp_register_style(
+    'trs-module-name',
+    TRS_KIT_URL . 'modules/module-name/module-name.css',
+    [],
+    TRS_KIT_VERSION
+);
+
+wp_register_script(
+    'trs-module-name',
+    TRS_KIT_URL . 'modules/module-name/module-name.js',
+    [ 'jquery' ],
+    TRS_KIT_VERSION,
+    true
+);
+```
+
+Assets are loaded on demand via `get_style_depends()` / `get_script_depends()` — Elementor handles conditional loading automatically.
+
+## Widget Registration
+
+```php
+\Elementor\Plugin::instance()->widgets_manager->register( new TRS_Widget_Module_Name() );
+```
+
+Call this on `elementor/widgets/register` action hook.
