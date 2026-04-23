@@ -1,0 +1,163 @@
+/* ==========================================================================
+   TRS Services Carousel
+   ========================================================================== */
+
+.trs-services-carousel {
+	overflow: hidden;
+	width: 100%;
+}
+
+/* ── Track ──────────────────────────────────────────────────────────────── */
+
+.trs-sc-track {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	cursor: grab;
+	/* Tiny bottom padding so card box-shadows aren't clipped */
+	padding-bottom: 4px;
+	margin-bottom: -4px;
+}
+
+.trs-sc-track::-webkit-scrollbar {
+	display: none;
+}
+
+.trs-sc-track.is-dragging {
+	cursor: grabbing;
+	/* Disable snap while dragging for a fluid feel */
+	scroll-snap-type: none;
+	user-select: none;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+
+.trs-sc-card {
+	display: flex;
+	flex-direction: column;
+	gap: 60px;
+	width: 344px;
+	min-height: 390px;
+	flex-shrink: 0;
+	background-color: #f8f7f2;
+	border-radius: 24px;
+	padding: 24px;
+	scroll-snap-align: start;
+	box-sizing: border-box;
+}
+
+/* ── Icon ───────────────────────────────────────────────────────────────── */
+
+.trs-sc-icon-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 36px;
+	background-color: #fbd760;
+}
+
+.trs-sc-icon-wrap i {
+	font-size: 24px;
+	color: #212121;
+	line-height: 1;
+}
+
+.trs-sc-icon-wrap svg {
+	width: 24px;
+	height: 24px;
+	fill: #212121;
+}
+
+/* ── Content area ───────────────────────────────────────────────────────── */
+
+.trs-sc-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex: 1;
+	gap: 56px;
+}
+
+.trs-sc-text {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* ── Title ──────────────────────────────────────────────────────────────── */
+
+.trs-sc-title {
+	font-size: 24px;
+	line-height: 32px;
+	color: #212121;
+	margin: 0;
+}
+
+/* ── Description ────────────────────────────────────────────────────────── */
+
+.trs-sc-description {
+	font-size: 16px;
+	line-height: 24px;
+	color: #212121;
+	margin: 0;
+}
+
+/* ── CTA Button ─────────────────────────────────────────────────────────── */
+
+.trs-sc-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 48px;
+	padding: 4px 24px;
+	border-radius: 56px;
+	background-color: #212121;
+	color: #ffffff;
+	text-decoration: none;
+	font-size: 16px;
+	line-height: 24px;
+	white-space: nowrap;
+	transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+	flex-shrink: 0;
+}
+
+.trs-sc-btn:hover {
+	opacity: 0.85;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.trs-sc-btn svg {
+	flex-shrink: 0;
+	transition: transform 0.2s ease;
+}
+
+.trs-sc-btn:hover svg {
+	transform: translateX(2px);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+	.trs-sc-card {
+		width: 300px;
+	}
+}
+
+@media (max-width: 767px) {
+	.trs-sc-card {
+		width: 280px;
+		gap: 40px;
+	}
+
+	.trs-sc-content {
+		gap: 40px;
+	}
+}
