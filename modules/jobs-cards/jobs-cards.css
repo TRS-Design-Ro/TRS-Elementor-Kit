@@ -1,0 +1,340 @@
+/**
+ * Jobs Cards — front-end styles
+ * Matches the Figma design: Recrimco website (node 26265-758)
+ */
+
+/* ============================================================
+   Grid
+   ============================================================ */
+
+.trs-jobs-cards__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	column-gap: 24px;
+	row-gap: 24px;
+}
+
+/* ============================================================
+   Card shell
+   ============================================================ */
+
+.trs-jobs-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: #fff;
+	border: 1px solid #e67e22;
+	border-radius: 20px;
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
+}
+
+/* ============================================================
+   Hover background overlay (lives inside .trs-jobs-card__body)
+   ============================================================ */
+
+.trs-jobs-card__body {
+	position: relative;
+	flex: 1 1 auto;
+}
+
+.trs-jobs-card__body-bg {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		var(--jc-hover-angle, 180deg),
+		var(--jc-hover-from, #ffba00),
+		var(--jc-hover-to, #fbd760)
+	);
+	opacity: 0;
+	transition: opacity 0.35s ease;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Activate only when hover type is solid or gradient */
+.trs-jobs-cards[data-hover-type="solid"] .trs-jobs-card:hover .trs-jobs-card__body-bg,
+.trs-jobs-cards[data-hover-type="gradient"] .trs-jobs-card:hover .trs-jobs-card__body-bg {
+	opacity: 1;
+}
+
+/* ============================================================
+   Card body content
+   ============================================================ */
+
+.trs-jobs-card__body-content {
+	position: relative;
+	z-index: 1;
+	padding: 30px 30px 0; /* overridden by Elementor DIMENSIONS control */
+}
+
+/* ============================================================
+   Title
+   ============================================================ */
+
+.trs-jobs-card__title {
+	margin: 0 0 6px;
+	font-size: 32px;
+	font-weight: 500;
+	line-height: 1.25;
+	color: #212121;
+	transition: color 0.3s ease;
+}
+
+/* ============================================================
+   Description / location
+   ============================================================ */
+
+.trs-jobs-card__description {
+	margin: 0 0 20px;
+	font-size: 18px;
+	line-height: 1.44;
+	color: #666;
+	transition: color 0.3s ease;
+}
+
+/* ============================================================
+   Badges row
+   ============================================================ */
+
+.trs-jobs-card__badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 40px;
+}
+
+.trs-jobs-card__badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 12px;
+	background-color: #f5f5f5;
+	color: #5f5270;
+	font-size: 16px;
+	line-height: 1.5;
+	border-radius: 46px;
+	white-space: nowrap;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease;
+}
+
+/* ============================================================
+   Job info row (posted time · applicants)
+   ============================================================ */
+
+.trs-jobs-card__info {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.trs-jobs-card__posted-time,
+.trs-jobs-card__applicants {
+	font-size: 16px;
+	line-height: 1.5;
+	font-style: italic;
+	color: #666;
+	transition: color 0.3s ease;
+}
+
+.trs-jobs-card__separator {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 6px;
+	line-height: 1;
+	color: #212121;
+	flex-shrink: 0;
+	transition: color 0.3s ease;
+}
+
+.trs-jobs-card__separator i,
+.trs-jobs-card__separator svg {
+	display: block;
+	width: 1em;
+	height: 1em;
+}
+
+/* ============================================================
+   Action row (button + salary)
+   ============================================================ */
+
+.trs-jobs-card__action {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-bottom: 22px;
+}
+
+.trs-jobs-card__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 22px;
+	background-color: #212121;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.5;
+	border-radius: 46px;
+	text-decoration: none;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		opacity 0.25s ease;
+}
+
+/* Standalone hover (not card-level hover) */
+.trs-jobs-card__button:hover,
+.trs-jobs-card__button:focus {
+	opacity: 0.82;
+	color: #fff;
+}
+
+.trs-jobs-card__salary {
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 1.2;
+	white-space: nowrap;
+	text-align: right;
+}
+
+.trs-jobs-card__salary-range {
+	color: #fbd760;
+	transition: color 0.3s ease;
+}
+
+.trs-jobs-card__salary-unit {
+	color: #666;
+	transition: color 0.3s ease;
+}
+
+/* ============================================================
+   Divider
+   ============================================================ */
+
+.trs-jobs-card__divider {
+	width: 100%;
+	height: 0;
+	border: none;
+	border-top: 1px dashed #e0e0e0;
+	margin: 16px 0;
+	flex-shrink: 0;
+}
+
+/* ============================================================
+   Footer (employer logo + name)
+   ============================================================ */
+
+.trs-jobs-card__footer {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0 30px 20px;
+	background-color: inherit;
+	flex-shrink: 0;
+}
+
+.trs-jobs-card__employer-logo {
+	display: block;
+	width: 46px;
+	height: 46px;
+	object-fit: cover;
+	border-radius: 50%;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	transition: border-color 0.3s ease;
+}
+
+/* Logo shape presets — driven by data-logo-shape on the wrapper */
+.trs-jobs-cards[data-logo-shape="circle"]  .trs-jobs-card__employer-logo { border-radius: 50%; }
+.trs-jobs-cards[data-logo-shape="square"]  .trs-jobs-card__employer-logo { border-radius: 0; }
+.trs-jobs-cards[data-logo-shape="rounded"] .trs-jobs-card__employer-logo { border-radius: 12px; }
+
+.trs-jobs-card__employer-name {
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 1.2;
+	color: #212121;
+	transition: color 0.3s ease;
+}
+
+/* ============================================================
+   Tablet  ≤ 1024px
+   ============================================================ */
+
+@media (max-width: 1024px) {
+	.trs-jobs-cards__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.trs-jobs-card__title {
+		font-size: 26px;
+	}
+
+	.trs-jobs-card__body-content {
+		padding: 24px 24px 0;
+	}
+
+	.trs-jobs-card__footer {
+		padding: 0 24px 18px;
+	}
+
+	.trs-jobs-card__badges {
+		margin-bottom: 30px;
+	}
+}
+
+/* ============================================================
+   Mobile  ≤ 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+	.trs-jobs-cards__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.trs-jobs-card__title {
+		font-size: 22px;
+	}
+
+	.trs-jobs-card__body-content {
+		padding: 20px 20px 0;
+	}
+
+	.trs-jobs-card__footer {
+		padding: 0 20px 18px;
+	}
+
+	.trs-jobs-card__action {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.trs-jobs-card__salary {
+		text-align: left;
+	}
+
+	.trs-jobs-card__badges {
+		gap: 6px;
+		margin-bottom: 24px;
+	}
+
+	.trs-jobs-card__info {
+		gap: 8px;
+	}
+
+	.trs-jobs-card__divider {
+		margin: 14px 0;
+	}
+}
