@@ -1,0 +1,157 @@
+/* ── Logo Carousel ─────────────────────────────────────────────────────────── */
+
+.trs-logo-carousel {
+	--trs-lc-items: 5;
+	--trs-lc-gap: 48px;
+	--trs-lc-speed: 30s;
+	--trs-lc-fade: #212121;
+	--trs-lc-fade-width: 120px;
+
+	position: relative;
+	width: 100%;
+}
+
+/* ── Viewport ──────────────────────────────────────────────────────────────── */
+
+.trs-lc-viewport {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	/*
+	 * container-type enables the cqi unit used to calculate item widths.
+	 * Each item's width = (100cqi - gap * (N-1)) / N, where 100cqi = this
+	 * element's inline size — giving exactly N logos visible at any breakpoint.
+	 */
+	container-type: inline-size;
+}
+
+/* ── Edge fades ────────────────────────────────────────────────────────────── */
+
+.trs-lc-viewport::before,
+.trs-lc-viewport::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--trs-lc-fade-width, 120px);
+	z-index: 2;
+	pointer-events: none;
+}
+
+.trs-lc-viewport::before {
+	left: 0;
+	background: linear-gradient(
+		to right,
+		var(--trs-lc-fade, #212121) 0%,
+		transparent 100%
+	);
+}
+
+.trs-lc-viewport::after {
+	right: 0;
+	background: linear-gradient(
+		to left,
+		var(--trs-lc-fade, #212121) 0%,
+		transparent 100%
+	);
+}
+
+/* ── Track ─────────────────────────────────────────────────────────────────── */
+
+.trs-lc-track {
+	display: flex;
+	align-items: center;
+	gap: var(--trs-lc-gap, 48px);
+	width: max-content;
+	will-change: transform;
+}
+
+/*
+ * JS adds .trs-lc-track--animated after:
+ *   1. Cloning enough sets to fill the viewport seamlessly
+ *   2. Setting --trs-lc-move on the parent to the precise pixel distance
+ * This prevents the animation from running before the correct offset is known.
+ */
+.trs-lc-track--animated {
+	animation: trs-lc-scroll var(--trs-lc-speed, 30s) linear infinite;
+}
+
+.trs-lc--rtl .trs-lc-track--animated {
+	animation-name: trs-lc-scroll-rtl;
+}
+
+.trs-lc-track--paused {
+	animation-play-state: paused;
+}
+
+/* ── Items ─────────────────────────────────────────────────────────────────── */
+
+.trs-lc-item {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/*
+	 * Each item occupies exactly 1/N of the viewport, accounting for gaps.
+	 * 100cqi = width of .trs-lc-viewport (container-type: inline-size ancestor).
+	 */
+	width: calc(
+		(100cqi - var(--trs-lc-gap, 48px) * (var(--trs-lc-items, 5) - 1))
+		/ var(--trs-lc-items, 5)
+	);
+}
+
+.trs-lc-item img {
+	display: block;
+	width: 100%;
+	height: 48px;
+	object-fit: contain;
+	transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.trs-lc-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────────── */
+
+/*
+ * --trs-lc-move is set in pixels by JS to exactly one set-width + one gap.
+ * Translating by that amount lands on the first clone, which is visually
+ * identical to the start of the original set → seamless infinite loop.
+ */
+@keyframes trs-lc-scroll {
+	from { transform: translateX(0); }
+	to   { transform: translateX(calc(-1 * var(--trs-lc-move, 50%))); }
+}
+
+@keyframes trs-lc-scroll-rtl {
+	from { transform: translateX(calc(-1 * var(--trs-lc-move, 50%))); }
+	to   { transform: translateX(0); }
+}
+
+/* ── Responsive defaults ───────────────────────────────────────────────────── */
+/*
+ * These act as unstyled fallbacks. Elementor's generated CSS (higher specificity
+ * via the widget wrapper class) will override these per the panel controls.
+ */
+
+@media (max-width: 1024px) {
+	.trs-logo-carousel {
+		--trs-lc-items: 3;
+		--trs-lc-gap: 32px;
+		--trs-lc-fade-width: 80px;
+	}
+}
+
+@media (max-width: 767px) {
+	.trs-logo-carousel {
+		--trs-lc-items: 2;
+		--trs-lc-gap: 24px;
+		--trs-lc-fade-width: 60px;
+	}
+}
