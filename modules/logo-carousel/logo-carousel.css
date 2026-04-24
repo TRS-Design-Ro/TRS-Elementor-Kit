@@ -5,6 +5,7 @@
 	--trs-lc-gap: 48px;
 	--trs-lc-speed: 30s;
 	--trs-lc-fade: #212121;
+	--trs-lc-fade-opacity: 1;
 	--trs-lc-fade-width: 120px;
 
 	position: relative;
@@ -36,6 +37,7 @@
 	width: var(--trs-lc-fade-width, 120px);
 	z-index: 2;
 	pointer-events: none;
+	opacity: var(--trs-lc-fade-opacity, 1);
 }
 
 .trs-lc-viewport::before {

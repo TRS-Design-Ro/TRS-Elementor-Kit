@@ -174,6 +174,14 @@ class TRS_Widget_Logo_Carousel extends \Elementor\Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .trs-logo-carousel' => '--trs-lc-fade: {{VALUE}};' ],
 		] );
 
+		$this->add_control( 'fade_intensity', [
+			'label'     => esc_html__( 'Fade Intensity', 'trs-kit' ),
+			'type'      => \Elementor\Controls_Manager::SLIDER,
+			'range'     => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+			'default'   => [ 'size' => 1 ],
+			'selectors' => [ '{{WRAPPER}} .trs-logo-carousel' => '--trs-lc-fade-opacity: {{SIZE}};' ],
+		] );
+
 		$this->add_responsive_control( 'fade_width', [
 			'label'          => esc_html__( 'Fade Width', 'trs-kit' ),
 			'type'           => \Elementor\Controls_Manager::SLIDER,
