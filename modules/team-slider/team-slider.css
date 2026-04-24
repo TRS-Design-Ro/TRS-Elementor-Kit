@@ -1,0 +1,403 @@
+/* ============================================================
+   TRS Team Slider
+   Absolute-positioned slides; JS sets left / width / opacity.
+   CSS classes drive background, image size, and text visibility.
+   ============================================================ */
+
+.trs-team-slider {
+	/* ── Layout tokens ─────────────────────────── */
+	--trs-ts-active-w:      726px;
+	--trs-ts-preview-w:     305px;
+	--trs-ts-card-h:        655px;
+	--trs-ts-label-h:        44px;
+	--trs-ts-gap:            24px;
+	--trs-ts-card-gap:       32px;
+	--trs-ts-card-padding:   24px;
+	--trs-ts-card-radius:    24px;
+	--trs-ts-active-img-w:  214px;
+	/* ── Colour tokens ─────────────────────────── */
+	--trs-ts-card-bg:       #212121;
+	/* ── Animation tokens ──────────────────────── */
+	--trs-ts-dur:            0.65s;
+	--trs-ts-ease:           cubic-bezier(0.4, 0, 0.2, 1);
+	--trs-ts-anim:           var(--trs-ts-dur) var(--trs-ts-ease);
+}
+
+/* ── Navigation row ─────────────────────────────────────────── */
+
+.trs-ts-nav {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	margin-bottom: 24px;
+}
+
+.trs-ts-arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: 1.5px solid #212121;
+	border-radius: 50%;
+	background: transparent;
+	color: #212121;
+	cursor: pointer;
+	line-height: 1;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.trs-ts-arrow:hover,
+.trs-ts-arrow:focus-visible {
+	background: #212121;
+	color: #ffffff;
+	outline: none;
+}
+
+.trs-ts-arrow i {
+	font-size: 18px;
+	pointer-events: none;
+	line-height: 1;
+}
+
+.trs-ts-arrow svg {
+	width: 18px;
+	height: 18px;
+	pointer-events: none;
+}
+
+/* ── Viewport ───────────────────────────────────────────────── */
+
+.trs-ts-viewport {
+	position: relative;
+	overflow: hidden;
+	/* Total height = card-h.
+	   Active slides fill it completely; preview slides divide it into
+	   (card-h - label-h) of image + label-h of name label. */
+	height: var(--trs-ts-card-h);
+}
+
+/* ── Slides ─────────────────────────────────────────────────── */
+
+/* Base state: collapsed/invisible — JS overrides left + width + opacity */
+.trs-ts-slide {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	opacity: 0;
+	display: flex;
+	flex-direction: column;
+	pointer-events: none;
+	/* Transitions only enabled after JS initialisation to avoid boot flash */
+}
+
+/* Transitions enabled once JS has positioned everything */
+.trs-ts-initialized .trs-ts-slide {
+	transition:
+		left    var(--trs-ts-anim),
+		width   var(--trs-ts-anim),
+		opacity 0.5s ease;
+}
+
+.trs-ts-slide {
+	z-index: 1;
+}
+
+.trs-ts-slide--active {
+	z-index: 3; /* always on top regardless of DOM order */
+}
+
+.trs-ts-slide--preview {
+	z-index: 2;
+}
+
+.trs-ts-slide--active,
+.trs-ts-slide--preview {
+	pointer-events: auto;
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+
+.trs-ts-card {
+	display: flex;
+	flex-direction: row;
+	gap: 0;
+	/* Active default: full height */
+	height: var(--trs-ts-card-h);
+	border-radius: var(--trs-ts-card-radius);
+	background-color: transparent;
+	padding: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	flex-shrink: 0;
+	transition:
+		height           var(--trs-ts-anim),
+		background-color var(--trs-ts-anim),
+		padding          var(--trs-ts-anim),
+		gap              var(--trs-ts-anim);
+}
+
+/* Preview: shorter card so the name label fits below within card-h */
+.trs-ts-slide--preview .trs-ts-card {
+	height: calc(var(--trs-ts-card-h) - var(--trs-ts-label-h));
+}
+
+.trs-ts-slide--active .trs-ts-card {
+	background-color: var(--trs-ts-card-bg);
+	padding:          var(--trs-ts-card-padding);
+	gap:              var(--trs-ts-card-gap);
+}
+
+/* ── Image wrap ─────────────────────────────────────────────── */
+
+.trs-ts-image-wrap {
+	/* Preview default: fills entire card width */
+	width: var(--trs-ts-preview-w);
+	/* align-self: stretch fills the card's content area automatically,
+	   so the height follows the padding transition without overflow. */
+	align-self: stretch;
+	flex-shrink: 0;
+	border-radius: var(--trs-ts-card-radius);
+	overflow: hidden;
+	transition:
+		width         var(--trs-ts-anim),
+		border-radius var(--trs-ts-anim);
+}
+
+.trs-ts-slide--active .trs-ts-image-wrap {
+	/* Active: narrow sidebar portrait */
+	width: var(--trs-ts-active-img-w);
+	/* Slightly smaller radius so it sits inside the padded card */
+	border-radius: calc(var(--trs-ts-card-radius) - 6px);
+}
+
+.trs-team-slider .trs-ts-image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center top;
+}
+
+/* ── Content (text) ─────────────────────────────────────────── */
+
+.trs-ts-content {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	overflow: hidden;
+	opacity: 0;
+	/* transition: none here means when a slide LEAVES the active state the
+	   content vanishes immediately — before the card width animation begins —
+	   so no text reflow is ever visible. */
+	transition: none;
+}
+
+.trs-ts-slide--active .trs-ts-content {
+	opacity: 1;
+	/* Name + job title fade in quickly as the card expands — no delay needed */
+	transition: opacity 0.25s ease 0.3s;
+}
+
+.trs-ts-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.trs-ts-name {
+	margin: 0;
+	font-size: 24px;
+	line-height: 32px;
+	font-weight: 500;
+	color: #ffffff;
+}
+
+.trs-ts-job-title {
+	margin: 0;
+	font-size: 16px;
+	line-height: 24px;
+	color: rgba(255, 255, 255, 0.65);
+}
+
+.trs-ts-description {
+	font-size: 18px;
+	line-height: 1.65;
+	color: #ffffff;
+	/* Hidden by default; fades in with a delay so the card finishes
+	   expanding before the description text appears */
+	opacity: 0;
+	transition: none; /* instant hide when slide loses active class */
+}
+
+.trs-ts-slide--active .trs-ts-description {
+	opacity: 1;
+	transition: opacity 0.35s ease 0.6s;
+}
+
+.trs-ts-description p {
+	margin: 0 0 1em;
+}
+
+.trs-ts-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* ── Preview name label ─────────────────────────────────────── */
+
+.trs-ts-preview-name {
+	flex-shrink: 0;
+	height: 0;
+	padding-top: 0;
+	overflow: hidden;
+	text-align: center;
+	font-size: 24px;
+	line-height: 32px;
+	font-weight: 500;
+	color: #212121;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	box-sizing: border-box;
+	/* invisible by default */
+	opacity: 0;
+	transition:
+		height      var(--trs-ts-anim),
+		padding-top var(--trs-ts-anim),
+		opacity     0.25s ease;
+}
+
+.trs-ts-slide--preview .trs-ts-preview-name {
+	height:      var(--trs-ts-label-h);
+	padding-top: 12px;
+	opacity: 1;
+	/* Fade-in delayed so the card layout settles first */
+	transition:
+		height      var(--trs-ts-anim),
+		padding-top var(--trs-ts-anim),
+		opacity     0.3s ease 0.28s;
+}
+
+/* Active slide: label collapses so no dead space below the card */
+.trs-ts-slide--active .trs-ts-preview-name {
+	height:      0;
+	padding-top: 0;
+	opacity:     0;
+}
+
+/* ── Dot indicators ─────────────────────────────────────────── */
+
+.trs-ts-dots {
+	display: none; /* visible only on mobile via media query */
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	margin-top: 20px;
+}
+
+.trs-ts-dot {
+	display: block;
+	width: 8px;
+	height: 8px;
+	padding: 0;
+	border: none;
+	border-radius: 4px;
+	background-color: rgba(33, 33, 33, 0.2);
+	cursor: pointer;
+	transition:
+		width           0.35s var(--trs-ts-ease),
+		background-color 0.25s ease;
+}
+
+.trs-ts-dot--active {
+	width: 24px; /* pill shape for active dot */
+	background-color: #212121;
+}
+
+/* ── Tablet overrides (no Elementor responsive controls) ────── */
+
+@media (max-width: 1024px) and (min-width: 768px) {
+	.trs-team-slider {
+		--trs-ts-active-w:     520px;
+		--trs-ts-preview-w:    210px;
+		--trs-ts-card-h:       520px;
+		--trs-ts-gap:           16px;
+		--trs-ts-card-gap:      20px;
+		--trs-ts-active-img-w: 155px;
+	}
+}
+
+/* ── Mobile overrides ───────────────────────────────────────── */
+
+@media (max-width: 767px) {
+	.trs-team-slider {
+		/* Layout tokens — JS uses viewport width for activeW, not this var */
+		--trs-ts-card-h:        480px;
+		--trs-ts-gap:            10px;
+		--trs-ts-card-gap:       12px;
+		--trs-ts-card-padding:   14px;
+		--trs-ts-card-radius:    16px;
+		--trs-ts-label-h:        40px;
+		/* Mobile portrait image height (top portion of vertical card) */
+		--trs-ts-mobile-img-h:  350px;
+	}
+
+	/* Show dot indicators */
+	.trs-ts-dots {
+		display: flex;
+	}
+
+	/* ── Vertical card layout on mobile ─────────── */
+
+	/* All cards stack image on top, text below — applies to every state
+	   (active, hidden) so the layout never reflows mid-animation. */
+	.trs-ts-card {
+		flex-direction: column;
+	}
+
+	.trs-ts-slide--active .trs-ts-description {
+		transition-delay: 0.4s;
+	}
+
+	/* Image: fills the card width, fixed portrait height */
+	.trs-ts-image-wrap {
+		width:      100%;
+		height:     var(--trs-ts-mobile-img-h);
+		flex-shrink: 0;
+		align-self:  auto;
+		/* Round top corners to match card, square bottom to meet content */
+		border-radius: var(--trs-ts-card-radius) var(--trs-ts-card-radius) 0 0;
+	}
+
+	/* Active image: same full-width overrides (specificity parity) */
+	.trs-ts-slide--active .trs-ts-image-wrap {
+		width:         100%;
+		height:        var(--trs-ts-mobile-img-h);
+		border-radius: calc(var(--trs-ts-card-radius) - 4px) calc(var(--trs-ts-card-radius) - 4px) 0 0;
+	}
+
+	/* Image fades in on the active slide, fades out on all others.
+	   Only opacity transitions — no width/border-radius movement. */
+	.trs-ts-image-wrap {
+		opacity: 0;
+		transition: opacity 0.35s ease;
+	}
+
+	.trs-ts-slide--active .trs-ts-image-wrap {
+		opacity: 1;
+	}
+
+	/* Content: fills remaining card height below the image.
+	   Switch from space-between to flex-start so name and description
+	   sit together without an artificial gap between them. */
+	.trs-ts-slide--active .trs-ts-content {
+		flex: 1;
+		overflow: hidden;
+		justify-content: flex-start;
+		gap: 10px;
+	}
+}
