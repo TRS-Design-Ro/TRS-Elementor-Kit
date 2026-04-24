@@ -226,6 +226,12 @@ class TRS_Widget_Testimonial_Cards extends \Elementor\Widget_Base {
 			'selectors' => [ '{{WRAPPER}} .trs-tc-card' => 'background-color: {{VALUE}};' ],
 		] );
 
+		$this->add_control( 'card_border_color', [
+			'label'     => esc_html__( 'Card Border Color', 'trs-kit' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .trs-tc-card' => 'border-color: {{VALUE}};' ],
+		] );
+
 		$this->add_responsive_control( 'card_radius', [
 			'label'      => esc_html__( 'Card Border Radius', 'trs-kit' ),
 			'type'       => \Elementor\Controls_Manager::SLIDER,
