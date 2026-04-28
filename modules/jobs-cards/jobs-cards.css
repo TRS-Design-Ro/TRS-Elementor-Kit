@@ -315,8 +315,14 @@
 		padding: 0 20px 18px;
 	}
 
+	.trs-jobs-card__action {
+		flex-direction: row;
+		align-items: center;
+	}
+
 	.trs-jobs-card__salary {
 		font-size: 15px;
+		text-align: right;
 	}
 
 	.trs-jobs-card__badges {
