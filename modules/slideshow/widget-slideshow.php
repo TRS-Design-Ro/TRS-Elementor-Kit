@@ -949,6 +949,7 @@ class TRS_Widget_Slideshow extends \Elementor\Widget_Base {
 	 */
 	private function render_nav_lines( int $total ): void {
 		printf( '<div class="trs-ss-nav" role="tablist" aria-label="%s">', esc_attr__( 'Slide navigation', 'trs-kit' ) );
+		echo '<div class="trs-ss-nav-inner">';
 
 		for ( $i = 0; $i < $total; $i++ ) {
 			printf(
@@ -960,6 +961,7 @@ class TRS_Widget_Slideshow extends \Elementor\Widget_Base {
 			);
 		}
 
+		echo '</div>';
 		echo '</div>';
 	}
 

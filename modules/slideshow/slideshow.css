@@ -14,10 +14,11 @@
            .trs-ss-button
              .trs-ss-button-text
              .trs-ss-button-icon
-   .trs-ss-nav              segmented "line" slide changer
-     .trs-ss-line             clickable hit-area (native button, chrome reset)
-       .trs-ss-line-fill        the visible thin line (track)
-         .trs-ss-line-progress   autoplay "loading" fill, animated via JS
+   .trs-ss-nav              full-width positioning box (handles alignment)
+     .trs-ss-nav-inner        width-capped row of lines (handles gap/width)
+       .trs-ss-line             clickable hit-area (native button, chrome reset)
+         .trs-ss-line-fill        the visible thin line (track)
+           .trs-ss-line-progress   autoplay "loading" fill, animated via JS
    .trs-ss-arrows           optional prev/next buttons
        .trs-ss-arrow
    ========================================================== */
@@ -236,6 +237,15 @@
 
 /* ── Slide changer ("lines") ─────────────────────────────── */
 
+/* Outer box: spans the full available width (left → right padding) purely
+   for positioning purposes — `justify-content` here decides where the
+   width-capped `.trs-ss-nav-inner` row sits. Note: if this box had its own
+   `max-width` (as it used to), it would sit pinned at `left` regardless of
+   `justify-content`, because with both `left` and `right` set, an
+   auto-width box that gets shrunk by `max-width` stays anchored to `left`
+   — the leftover space never made it to the right, so "Align: Right" had
+   no visible effect. Splitting outer (position) / inner (width cap) fixes
+   that: the outer never shrinks, so its free space is real and usable. */
 .trs-ss-nav {
 	position: absolute;
 	left: var(--trs-ss-pad-left);
@@ -243,9 +253,6 @@
 	bottom: var(--trs-ss-pad-bottom);
 	z-index: 4;
 	display: flex;
-	align-items: center;
-	gap: var(--trs-ss-line-gap);
-	max-width: var(--trs-ss-nav-max-w);
 	pointer-events: none;
 }
 
@@ -261,6 +268,15 @@
 
 .trs-ss-nav-align-right .trs-ss-nav {
 	justify-content: flex-end;
+}
+
+.trs-ss-nav-inner {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	max-width: var(--trs-ss-nav-max-w);
+	gap: var(--trs-ss-line-gap);
+	pointer-events: none;
 }
 
 /* `all: unset` strips every default/theme button style (background,
@@ -435,8 +451,11 @@
 		right: 0;
 		bottom: var(--trs-ss-pad-bottom);
 		justify-content: center !important;
-		max-width: none;
 		padding: 0 var(--trs-ss-pad-left);
+	}
+
+	.trs-ss-nav-inner {
+		max-width: none;
 	}
 
 	.trs-ss-arrows {
