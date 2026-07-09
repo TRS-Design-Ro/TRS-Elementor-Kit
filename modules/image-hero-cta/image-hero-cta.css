@@ -1,0 +1,214 @@
+/* ==========================================================
+   Image Hero with CTA  –  mobile-first stylesheet
+   ==========================================================
+   Structure
+   ─────────────────────────────────────────────────────────
+   .trs-ihc              section wrapper (position:relative)
+     .trs-ihc-bg          background layer (image / color / gradient)
+     .trs-ihc-overlay     tint overlay for text legibility
+     .trs-ihc-frame       decorative "viewfinder" lines
+     .trs-ihc-grid        CSS grid holding one or more .trs-ihc-card
+       .trs-ihc-card       frosted-glass content card (title, text, button)
+   ========================================================== */
+
+/* ── Custom properties (defaults; overridden by Elementor controls) ── */
+
+.trs-ihc {
+	--trs-ihc-cols: 1;
+	--trs-ihc-card-w: 389px;
+	--trs-ihc-row-h: 450px;
+	--trs-ihc-min-h: 600px;
+	--trs-ihc-pad-top: 75px;
+	--trs-ihc-pad-right: 0px;
+	--trs-ihc-pad-bottom: 75px;
+	--trs-ihc-pad-left: 150px;
+	--trs-ihc-gap-x: 24px;
+	--trs-ihc-gap-y: 24px;
+	--trs-ihc-line-color: rgba(255, 255, 255, 0.6);
+	--trs-ihc-line-w: 1px;
+}
+
+/* ── Section wrapper ────────────────────────────────────── */
+
+.trs-ihc {
+	position: relative;
+	display: block;
+	width: 100%;
+	min-height: var(--trs-ihc-min-h);
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.trs-ihc-bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-size: cover;
+	background-position: center;
+}
+
+.trs-ihc-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* ── Frame lines ────────────────────────────────────────── */
+
+.trs-ihc-frame {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+}
+
+.trs-ihc-frame-h {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: var(--trs-ihc-line-w);
+	background-color: var(--trs-ihc-line-color);
+}
+
+.trs-ihc-frame-h--top {
+	top: var(--trs-ihc-pad-top);
+}
+
+.trs-ihc-frame-h--bottom {
+	bottom: var(--trs-ihc-pad-bottom);
+}
+
+.trs-ihc-frame-v {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--trs-ihc-line-w);
+	background-color: var(--trs-ihc-line-color);
+}
+
+/* ── Content grid ───────────────────────────────────────── */
+
+.trs-ihc-grid {
+	position: relative;
+	z-index: 3;
+	display: grid;
+	grid-template-columns: repeat(var(--trs-ihc-cols), var(--trs-ihc-card-w));
+	grid-auto-rows: var(--trs-ihc-row-h);
+	gap: var(--trs-ihc-gap-y) var(--trs-ihc-gap-x);
+	width: fit-content;
+	max-width: calc(100% - var(--trs-ihc-pad-left) - var(--trs-ihc-pad-right));
+	margin: var(--trs-ihc-pad-top) var(--trs-ihc-pad-right) var(--trs-ihc-pad-bottom) var(--trs-ihc-pad-left);
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+
+.trs-ihc-card {
+	/* No overflow:hidden here — it would clip the card's own box-shadow.
+	   border-radius already clips the background/backdrop-blur on its own. */
+	position: relative;
+	box-sizing: border-box;
+	padding: 40px 32px;
+	text-align: left;
+	background-color: rgba(255, 255, 255, 0.25);
+}
+
+.trs-ihc-title {
+	margin: 0 0 24px 0;
+	font-size: 40px;
+	line-height: 1.2;
+	font-weight: 500;
+	color: #ffffff;
+	word-break: break-word;
+}
+
+.trs-ihc-description {
+	margin: 0 0 32px 0;
+	font-size: 18px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.9);
+	word-break: break-word;
+}
+
+.trs-ihc-button {
+	display: inline-block;
+	background-color: #ffffff;
+	color: #1f1d1d;
+	font-size: 14px;
+	font-weight: 500;
+	padding: 13px 24px;
+	text-decoration: none;
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.trs-ihc-underline-yes .trs-ihc-button {
+	text-decoration: underline;
+}
+
+.trs-ihc-button:hover {
+	background-color: #1f1d1d;
+	color: #ffffff;
+}
+
+/* ==========================================================
+   Tablet  ≤ 1024px
+   ========================================================== */
+
+@media (max-width: 1024px) {
+	.trs-ihc-card {
+		padding: 32px 28px;
+	}
+
+	.trs-ihc-title {
+		font-size: 32px;
+		margin-bottom: 18px;
+	}
+
+	.trs-ihc-description {
+		font-size: 16px;
+		margin-bottom: 24px;
+	}
+}
+
+/* ==========================================================
+   Mobile  ≤ 767px  –  stack to a single column, simplify frame
+   ========================================================== */
+
+@media (max-width: 767px) {
+	.trs-ihc-grid {
+		/* Force a single, definite-width track so percentage-based card
+		   widths (the mobile default) resolve correctly instead of
+		   collapsing against the intrinsically-sized (fit-content) grid. */
+		grid-template-columns: 1fr;
+		width: calc(100% - var(--trs-ihc-pad-left) - var(--trs-ihc-pad-right));
+		max-width: calc(100% - var(--trs-ihc-pad-left) - var(--trs-ihc-pad-right));
+	}
+
+	.trs-ihc-title {
+		font-size: 26px;
+		margin-bottom: 14px;
+	}
+
+	.trs-ihc-description {
+		font-size: 15px;
+		margin-bottom: 20px;
+	}
+
+	.trs-ihc-button {
+		display: block;
+		text-align: center;
+	}
+}
+
+/* Simplify the frame to just the outer rectangle on tablet & mobile,
+   unless explicitly kept via the "Keep Inner Lines" control. */
+@media (max-width: 1024px) {
+	.trs-ihc:not(.trs-ihc--lines-mobile) .trs-ihc-frame-v--inner {
+		display: none;
+	}
+
+	.trs-ihc:not(.trs-ihc--lines-mobile) .trs-ihc-frame-v--end {
+		left: auto;
+		right: var(--trs-ihc-pad-right);
+	}
+}
