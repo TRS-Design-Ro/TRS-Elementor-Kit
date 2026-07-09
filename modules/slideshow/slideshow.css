@@ -16,7 +16,8 @@
              .trs-ss-button-icon
    .trs-ss-nav              segmented "line" slide changer
      .trs-ss-line             clickable hit-area (native button, chrome reset)
-       .trs-ss-line-fill        the visible thin line
+       .trs-ss-line-fill        the visible thin line (track)
+         .trs-ss-line-progress   autoplay "loading" fill, animated via JS
    .trs-ss-arrows           optional prev/next buttons
        .trs-ss-arrow
    ========================================================== */
@@ -39,6 +40,7 @@
 	--trs-ss-line-gap: 10px;
 	--trs-ss-nav-max-w: 260px;
 	--trs-ss-radius: 0px;
+	--trs-ss-autoplay-duration: 6000ms;
 }
 
 /* ── Wrapper ─────────────────────────────────────────────── */
@@ -281,18 +283,54 @@
 }
 
 .trs-ss-line-fill {
+	position: relative;
 	display: block;
 	width: 100%;
 	height: var(--trs-ss-line-thickness);
+	overflow: hidden;
 	background-color: var(--trs-ss-line-color);
 	border-radius: 2px;
 	transition: background-color 0.25s ease;
 }
 
-.trs-ss-line--active .trs-ss-line-fill,
 .trs-ss-line:hover .trs-ss-line-fill,
 .trs-ss-line:focus-visible .trs-ss-line-fill {
 	background-color: var(--trs-ss-line-active-color);
+}
+
+/* Progress overlay: fully lit by default when a line is active (covers the
+   "autoplay off" / editor state); JS adds `trs-ss-line--animating` to the
+   current line to instead grow it from 0% → 100% over the autoplay interval. */
+.trs-ss-line-progress {
+	position: absolute;
+	inset: 0;
+	width: 0;
+	background-color: var(--trs-ss-line-active-color);
+}
+
+.trs-ss-line--active .trs-ss-line-progress {
+	width: 100%;
+}
+
+.trs-ss-line--animating .trs-ss-line-progress {
+	width: 0;
+	animation: trs-ss-line-progress-fill var(--trs-ss-autoplay-duration) linear forwards;
+}
+
+.trs-ss-autoplay-paused .trs-ss-line-progress {
+	animation-play-state: paused;
+}
+
+@keyframes trs-ss-line-progress-fill {
+	from { width: 0; }
+	to   { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.trs-ss-line--animating .trs-ss-line-progress {
+		animation: none;
+		width: 100%;
+	}
 }
 
 /* ── Arrows ───────────────────────────────────────────────── */

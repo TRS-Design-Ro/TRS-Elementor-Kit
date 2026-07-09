@@ -40,8 +40,9 @@
 		var autoplay     = $slideshow.data( 'autoplay' ) === true;
 		var autoInterval = parseFloat( $slideshow.data( 'autoplay-interval' ) ) || 6000;
 		var pauseHover   = $slideshow.data( 'autoplay-pause-hover' ) === true;
-		var autoTimer    = null;
-		var hoverPaused  = false;
+		var autoTimeout  = null;
+		var remainingMs  = autoInterval;
+		var cycleStartTs = 0;
 
 		var inEditor = ( typeof elementorFrontend !== 'undefined' ) && elementorFrontend.isEditMode();
 
@@ -84,27 +85,77 @@
 		}
 
 		// ------------------------------------------------------------------
-		// Auto-play
+		// Auto-play + per-line "loading" progress bar
 		// ------------------------------------------------------------------
+
+		function clearAutoTimeout() {
+			if ( autoTimeout ) {
+				clearTimeout( autoTimeout );
+				autoTimeout = null;
+			}
+		}
+
+		// Animates the current slide's nav line from 0% → 100% over `ms`,
+		// synced with the autoplay timer. No-op when autoplay isn't running.
+		function animateCurrentLine( ms ) {
+			$lines.removeClass( 'trs-ss-line--animating' );
+
+			if ( ! autoplay || inEditor || total < 2 ) { return; }
+
+			var lineEl = $lines.get( current );
+			if ( ! lineEl ) { return; }
+
+			lineEl.style.setProperty( '--trs-ss-autoplay-duration', ms + 'ms' );
+			// Force a reflow so the keyframe animation restarts from 0 even
+			// when re-applied to the same element (e.g. single-slide loop).
+			void lineEl.offsetWidth;
+			lineEl.classList.add( 'trs-ss-line--animating' );
+		}
 
 		function startAutoplay() {
 			if ( ! autoplay || inEditor || total < 2 ) { return; }
-			clearInterval( autoTimer );
-			autoTimer = setInterval( function () {
-				if ( ! hoverPaused ) { navigate( 1 ); }
+			clearAutoTimeout();
+			remainingMs  = autoInterval;
+			cycleStartTs = Date.now();
+			animateCurrentLine( autoInterval );
+			autoTimeout = setTimeout( function () {
+				navigate( 1 );
+				startAutoplay();
 			}, autoInterval );
 		}
 
 		function stopAutoplay() {
-			clearInterval( autoTimer );
-			autoTimer = null;
+			clearAutoTimeout();
+			$lines.removeClass( 'trs-ss-line--animating' );
 		}
 
 		function resetAutoplay() {
+			$slideshow.removeClass( 'trs-ss-autoplay-paused' );
 			if ( autoplay && ! inEditor ) {
-				stopAutoplay();
 				startAutoplay();
+			} else {
+				stopAutoplay();
 			}
+		}
+
+		// Hover/focus pause: freezes both the JS timer and the CSS animation
+		// at their current position, and resumes both from there.
+		function pauseAutoplay() {
+			if ( ! autoTimeout ) { return; }
+			clearAutoTimeout();
+			remainingMs -= ( Date.now() - cycleStartTs );
+			if ( remainingMs < 50 ) { remainingMs = 50; }
+			$slideshow.addClass( 'trs-ss-autoplay-paused' );
+		}
+
+		function resumeAutoplay() {
+			if ( ! autoplay || inEditor || total < 2 || autoTimeout ) { return; }
+			$slideshow.removeClass( 'trs-ss-autoplay-paused' );
+			cycleStartTs = Date.now();
+			autoTimeout = setTimeout( function () {
+				navigate( 1 );
+				startAutoplay();
+			}, remainingMs );
 		}
 
 		// ------------------------------------------------------------------
@@ -155,8 +206,8 @@
 
 		// Hover pause/resume
 		if ( pauseHover ) {
-			$slideshow.on( 'mouseenter focusin', function () { hoverPaused = true; } );
-			$slideshow.on( 'mouseleave focusout', function () { hoverPaused = false; } );
+			$slideshow.on( 'mouseenter focusin', pauseAutoplay );
+			$slideshow.on( 'mouseleave focusout', resumeAutoplay );
 		}
 	};
 
