@@ -1,0 +1,396 @@
+/* ==========================================================
+   Slideshow  –  full-bleed hero carousel
+   ==========================================================
+   Structure
+   ─────────────────────────────────────────────────────────
+   .trs-slideshow            wrapper (position:relative)
+     .trs-ss-track            holds every .trs-ss-slide
+       .trs-ss-slide           one slide (bg + overlay + content)
+         .trs-ss-bg             background image layer
+         .trs-ss-overlay        tint overlay for text legibility
+         .trs-ss-content        title / description / button column
+           .trs-ss-title
+           .trs-ss-description
+           .trs-ss-button
+             .trs-ss-button-text
+             .trs-ss-button-icon
+     .trs-ss-nav              segmented "line" slide changer
+       .trs-ss-line
+     .trs-ss-arrows           optional prev/next buttons
+       .trs-ss-arrow
+   ========================================================== */
+
+/* ── Custom properties (defaults; overridden by Elementor controls) ── */
+
+.trs-slideshow {
+	--trs-ss-height: 680px;
+	--trs-ss-content-w: 605px;
+	--trs-ss-pad-top: 64px;
+	--trs-ss-pad-right: 64px;
+	--trs-ss-pad-bottom: 64px;
+	--trs-ss-pad-left: 64px;
+	--trs-ss-gap: 20px;
+	--trs-ss-bg-pos: center center;
+	--trs-ss-speed: 700ms;
+	--trs-ss-line-color: rgba(255, 255, 255, 0.4);
+	--trs-ss-line-active-color: #ffffff;
+	--trs-ss-line-thickness: 2px;
+	--trs-ss-line-gap: 10px;
+	--trs-ss-nav-max-w: 260px;
+	--trs-ss-radius: 0px;
+}
+
+/* ── Wrapper ─────────────────────────────────────────────── */
+
+.trs-slideshow {
+	position: relative;
+	display: block;
+	width: 100%;
+	isolation: isolate;
+	/* Radius lives here for the border/box-shadow controls; the track
+	   below clips the images to match without cropping this box-shadow. */
+	border-radius: var(--trs-ss-radius);
+}
+
+.trs-slideshow:focus-visible {
+	outline: 2px solid rgba(255, 255, 255, 0.8);
+	outline-offset: -2px;
+}
+
+/* ── Track & slides ──────────────────────────────────────── */
+
+.trs-ss-track {
+	position: relative;
+	width: 100%;
+	height: var(--trs-ss-height);
+	overflow: hidden;
+	border-radius: var(--trs-ss-radius);
+}
+
+.trs-ss-slide {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+	transition: opacity var(--trs-ss-speed) ease;
+}
+
+.trs-ss-slide--active {
+	opacity: 1;
+	pointer-events: auto;
+	z-index: 2;
+}
+
+/* Slide (horizontal) transition mode — JS toggles this data attribute */
+.trs-slideshow[data-effect="slide"] .trs-ss-track {
+	display: flex;
+}
+
+.trs-slideshow[data-effect="slide"] .trs-ss-slide {
+	position: relative;
+	flex: 0 0 100%;
+	width: 100%;
+	opacity: 1;
+	pointer-events: auto;
+	transition: none;
+}
+
+.trs-slideshow[data-effect="slide"].trs-ss-initialized .trs-ss-track {
+	transition: transform var(--trs-ss-speed) ease;
+}
+
+/* ── Background & overlay layers ─────────────────────────── */
+
+.trs-ss-bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-size: cover;
+	background-position: var(--trs-ss-bg-pos);
+	background-repeat: no-repeat;
+}
+
+.trs-ss-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background-color: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Content column ──────────────────────────────────────── */
+
+.trs-ss-content {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-width: var(--trs-ss-content-w);
+	box-sizing: border-box;
+	padding: var(--trs-ss-pad-top) var(--trs-ss-pad-right) var(--trs-ss-pad-bottom) var(--trs-ss-pad-left);
+	gap: var(--trs-ss-gap);
+}
+
+/* Horizontal alignment */
+.trs-ss-align-left .trs-ss-content {
+	align-items: flex-start;
+	text-align: left;
+	margin-right: auto;
+}
+
+.trs-ss-align-center .trs-ss-content {
+	align-items: center;
+	text-align: center;
+	margin-inline: auto;
+}
+
+.trs-ss-align-right .trs-ss-content {
+	align-items: flex-end;
+	text-align: right;
+	margin-left: auto;
+}
+
+/* Vertical alignment */
+.trs-ss-valign-top .trs-ss-content {
+	justify-content: flex-start;
+}
+
+.trs-ss-valign-middle .trs-ss-content {
+	justify-content: center;
+}
+
+.trs-ss-valign-bottom .trs-ss-content {
+	justify-content: flex-end;
+}
+
+/* ── Title / Description ─────────────────────────────────── */
+
+.trs-ss-title {
+	margin: 0;
+	font-size: 56px;
+	line-height: 1.15;
+	font-weight: 500;
+	color: #ffffff;
+	word-break: break-word;
+}
+
+.trs-ss-description {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.9);
+	word-break: break-word;
+}
+
+/* ── Button ───────────────────────────────────────────────── */
+
+.trs-ss-button {
+	display: inline-flex;
+	align-items: center;
+	flex-direction: row;
+	gap: 12px;
+	color: #ffffff;
+	background-color: transparent;
+	text-decoration: none;
+	cursor: pointer;
+	border: none;
+	padding: 0 0 6px 0;
+	transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+}
+
+.trs-ss-button-text {
+	font-size: 18px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	white-space: nowrap;
+}
+
+.trs-ss-button-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	flex-shrink: 0;
+}
+
+.trs-ss-button-icon i {
+	font-size: 16px;
+	line-height: 1;
+}
+
+.trs-ss-button-icon svg {
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+}
+
+.trs-ss-button:hover {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Slide changer ("lines") ─────────────────────────────── */
+
+.trs-ss-nav {
+	position: absolute;
+	left: var(--trs-ss-pad-left);
+	right: var(--trs-ss-pad-right);
+	bottom: var(--trs-ss-pad-bottom);
+	z-index: 4;
+	display: flex;
+	align-items: center;
+	gap: var(--trs-ss-line-gap);
+	max-width: var(--trs-ss-nav-max-w);
+	pointer-events: none;
+}
+
+.trs-ss-nav-align-left {
+	justify-content: flex-start;
+}
+
+.trs-ss-nav-align-center {
+	justify-content: center;
+}
+
+.trs-ss-nav-align-right {
+	justify-content: flex-end;
+}
+
+.trs-ss-line {
+	flex: 1 1 0;
+	min-width: 16px;
+	height: var(--trs-ss-line-thickness);
+	padding: 10px 0;
+	margin: -10px 0;
+	background: none;
+	border: none;
+	cursor: pointer;
+	pointer-events: auto;
+	background-color: var(--trs-ss-line-color);
+	background-clip: content-box;
+	box-sizing: content-box;
+	border-radius: 2px;
+	transition: background-color 0.25s ease;
+}
+
+.trs-ss-line--active {
+	background-color: var(--trs-ss-line-active-color);
+}
+
+.trs-ss-line:hover {
+	background-color: var(--trs-ss-line-active-color);
+}
+
+/* ── Arrows ───────────────────────────────────────────────── */
+
+.trs-ss-arrows {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+	pointer-events: none;
+}
+
+.trs-ss-arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border: 1.5px solid rgba(255, 255, 255, 0.6);
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.15);
+	color: #ffffff;
+	cursor: pointer;
+	pointer-events: auto;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.trs-ss-arrow:hover,
+.trs-ss-arrow:focus-visible {
+	background-color: #ffffff;
+	border-color: #ffffff;
+	color: #1f1d1d;
+	outline: none;
+}
+
+.trs-ss-arrow i {
+	font-size: 16px;
+	line-height: 1;
+	pointer-events: none;
+}
+
+/* ==========================================================
+   Tablet  ≤ 1024px
+   ========================================================== */
+
+@media (max-width: 1024px) {
+	.trs-ss-title {
+		font-size: 40px;
+	}
+
+	.trs-ss-description {
+		font-size: 16px;
+	}
+
+	.trs-ss-button-text {
+		font-size: 16px;
+	}
+
+	.trs-ss-arrow {
+		width: 40px;
+		height: 40px;
+	}
+}
+
+/* ==========================================================
+   Mobile  ≤ 767px
+   ========================================================== */
+
+@media (max-width: 767px) {
+	.trs-ss-title {
+		font-size: 30px;
+	}
+
+	.trs-ss-description {
+		font-size: 15px;
+	}
+
+	.trs-ss-button-text {
+		font-size: 14px;
+	}
+
+	/* Reserve room so the centered nav row never overlaps the content
+	   (nav becomes a full-width centered row below content on mobile). */
+	.trs-ss-content {
+		padding-bottom: calc(var(--trs-ss-pad-bottom) + 36px);
+	}
+
+	.trs-ss-nav {
+		left: 0;
+		right: 0;
+		bottom: var(--trs-ss-pad-bottom);
+		justify-content: center !important;
+		max-width: none;
+		padding: 0 var(--trs-ss-pad-left);
+	}
+
+	.trs-ss-arrows {
+		padding: 0 12px;
+	}
+
+	.trs-ss-arrow {
+		width: 36px;
+		height: 36px;
+	}
+
+	.trs-ss-arrow i {
+		font-size: 14px;
+	}
+}
