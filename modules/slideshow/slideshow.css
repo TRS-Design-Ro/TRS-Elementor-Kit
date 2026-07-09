@@ -14,9 +14,10 @@
            .trs-ss-button
              .trs-ss-button-text
              .trs-ss-button-icon
-     .trs-ss-nav              segmented "line" slide changer
-       .trs-ss-line
-     .trs-ss-arrows           optional prev/next buttons
+   .trs-ss-nav              segmented "line" slide changer
+     .trs-ss-line             clickable hit-area (native button, chrome reset)
+       .trs-ss-line-fill        the visible thin line
+   .trs-ss-arrows           optional prev/next buttons
        .trs-ss-arrow
    ========================================================== */
 
@@ -246,40 +247,51 @@
 	pointer-events: none;
 }
 
-.trs-ss-nav-align-left {
+/* `nav_alignment`'s prefix_class lands on the Elementor widget wrapper
+   (an ancestor of .trs-ss-nav), so the override must target the descendant. */
+.trs-ss-nav-align-left .trs-ss-nav {
 	justify-content: flex-start;
 }
 
-.trs-ss-nav-align-center {
+.trs-ss-nav-align-center .trs-ss-nav {
 	justify-content: center;
 }
 
-.trs-ss-nav-align-right {
+.trs-ss-nav-align-right .trs-ss-nav {
 	justify-content: flex-end;
 }
 
 .trs-ss-line {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 	flex: 1 1 0;
 	min-width: 16px;
-	height: var(--trs-ss-line-thickness);
-	padding: 10px 0;
-	margin: -10px 0;
+	height: 22px;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	align-items: center;
 	background: none;
 	border: none;
+	border-radius: 0;
+	font: inherit;
 	cursor: pointer;
 	pointer-events: auto;
+}
+
+.trs-ss-line-fill {
+	display: block;
+	width: 100%;
+	height: var(--trs-ss-line-thickness);
 	background-color: var(--trs-ss-line-color);
-	background-clip: content-box;
-	box-sizing: content-box;
 	border-radius: 2px;
 	transition: background-color 0.25s ease;
 }
 
-.trs-ss-line--active {
-	background-color: var(--trs-ss-line-active-color);
-}
-
-.trs-ss-line:hover {
+.trs-ss-line--active .trs-ss-line-fill,
+.trs-ss-line:hover .trs-ss-line-fill,
+.trs-ss-line:focus-visible .trs-ss-line-fill {
 	background-color: var(--trs-ss-line-active-color);
 }
 
@@ -297,12 +309,17 @@
 }
 
 .trs-ss-arrow {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
 	width: 48px;
 	height: 48px;
+	padding: 0;
+	font: inherit;
 	border: 1.5px solid rgba(255, 255, 255, 0.6);
 	border-radius: 50%;
 	background-color: rgba(255, 255, 255, 0.15);

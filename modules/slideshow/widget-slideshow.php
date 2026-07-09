@@ -952,7 +952,7 @@ class TRS_Widget_Slideshow extends \Elementor\Widget_Base {
 
 		for ( $i = 0; $i < $total; $i++ ) {
 			printf(
-				'<button type="button" class="trs-ss-line%1$s" data-idx="%2$d" role="tab" aria-selected="%3$s" aria-label="%4$s"></button>',
+				'<button type="button" class="trs-ss-line%1$s" data-idx="%2$d" role="tab" aria-selected="%3$s" aria-label="%4$s"><span class="trs-ss-line-fill"></span></button>',
 				0 === $i ? ' trs-ss-line--active' : '',
 				$i,
 				0 === $i ? 'true' : 'false',
